@@ -1,0 +1,47 @@
+#!/bin/bash
+
+# Verifie si le script est execute en tant que root
+if [ "$EUID" -ne 0 ]; then
+  echo "Veuillez executer ce script en tant que root ou avec sudo."
+  exit 1
+fi
+
+# Definir les departements et leurs ports dans des variables
+dep_informatique="dep-informatique"  # Nom du departement informatique
+port_informatique=3000              # Port pour le departement informatique
+
+dep_rh="dep-rh"                     # Nom du departement RH
+port_rh=3001                        # Port pour le departement RH
+
+dep_marketing="dep-marketing"       # Nom du departement Marketing
+port_marketing=3002                 # Port pour le departement Marketing
+
+# Chemin de base dans /var/www pour les repertoires des departements
+base_dir="/var/www"
+
+# Creer le repertoire pour le departement informatique
+mkdir -p "$base_dir/$dep_informatique"  # Cree le repertoire s'il n'existe pas
+echo "Bienvenue sur le serveur $dep_informatique" > "$base_dir/$dep_informatique/index.html"  # Ajoute une page texte simple
+
+# Demarrer un serveur HTTP pour le departement informatique sur le port 3000
+nohup python3 -m http.server $port_informatique --directory "$base_dir/$dep_informatique" > /dev/null 2>&1 &
+echo "Serveur $dep_informatique lance sur le port $port_informatique."
+
+# Creer le repertoire pour le departement RH
+mkdir -p "$base_dir/$dep_rh"  # Cree le repertoire s'il n'existe pas
+echo "Bienvenue sur le serveur $dep_rh" > "$base_dir/$dep_rh/index.html"  # Ajoute une page texte simple
+
+# Demarrer un serveur HTTP pour le departement RH sur le port 3001
+nohup python3 -m http.server $port_rh --directory "$base_dir/$dep_rh" > /dev/null 2>&1 &
+echo "Serveur $dep_rh lance sur le port $port_rh."
+
+# Creer le repertoire pour le departement Marketing
+mkdir -p "$base_dir/$dep_marketing"  # Cree le repertoire s'il n'existe pas
+echo "Bienvenue sur le serveur $dep_marketing" > "$base_dir/$dep_marketing/index.html"  # Ajoute une page texte simple
+
+# Demarrer un serveur HTTP pour le departement Marketing sur le port 3002
+nohup python3 -m http.server $port_marketing --directory "$base_dir/$dep_marketing" > /dev/null 2>&1 &
+echo "Serveur $dep_marketing lance sur le port $port_marketing."
+
+# Message final pour indiquer que tout est pret
+echo "Tous les serveurs sont demarres avec succes et les repertoires sont dans $base_dir."
