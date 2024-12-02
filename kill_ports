@@ -1,0 +1,20 @@
+#!/bin/bash
+
+# Ports des serveurs a tuer
+ports=(3000 3001 3002)
+
+# Parcourir chaque port et tuer les processus
+for port in "${ports[@]}"; do
+  # Trouver le PID du processus utilisant le port
+  pid=$(lsof -ti :"$port")
+  
+  # Verifier si un processus est trouve
+  if [ -n "$pid" ]; then
+    echo "Processus trouve sur le port $port avec PID $pid. Arret en cours..."
+    sudo kill -9 "$pid" && echo "Processus sur le port $port termine avec succes."
+  else
+    echo "Aucun processus trouve sur le port $port."
+  fi
+done
+
+echo "Tous les processus associes aux ports sont maintenant termines."
